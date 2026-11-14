@@ -1,0 +1,7 @@
+<application>
+  <nav>
+    <view name="psi_overview" />
+    <view name="psi_metrics" />
+    <search label="TA-psi Events" search="search index=main sourcetype=psi:status" />
+  </nav>
+</application>

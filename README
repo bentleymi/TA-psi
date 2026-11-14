@@ -1,0 +1,52 @@
+TA-psi
+====
+
+Collects PSI (pressure stall information) for CPU, memory and IO from /proc/pressure: some/full averages over 10s/60s/300s, including per-cgroup v2 pressure files when present. Emits JSON events to index=main (sourcetype psi:status) every 60s and psi_* metrics to index=metrics (sourcetype psi:metrics), with dashboards.
+
+Prerequisites
+-------------
+  * kernel with PSI enabled (default on 4.20+; /proc/pressure must exist)
+  * Splunk Enterprise or Universal Forwarder 9.x - 10.6 (forwarder recommended
+    on monitored hosts).
+  * A metrics-typed index (default name: metrics) on the indexer:
+
+      [metrics]
+      datatype = metric
+
+    Forwarders only need that index to exist on the indexer side.
+  * No network egress, no root requirement beyond the Splunk service account.
+    Fully standalone add-on with no dependencies.
+
+Install
+-------
+Install on each monitored host (Apps > Install app from file, splunk install
+app, or deployment server), restart Splunk, then verify:
+
+  index=main sourcetype="psi:status" | head
+
+Search quick reference
+----------------------
+  index=main sourcetype="psi:status" | head
+  | mcatalog values(metric_name) where index=metrics metric_name="psi.*" by host
+  | mstats avg("psi.*") where index=metrics span=60s by host
+
+Usage
+-----
+Events: index=main sourcetype=psi:status  (per-resource some/full avg10/60/300)
+Metrics: psi_cpu_some_avg10 ... psi_io_full_avg300 on index=metrics
+Dashboards: TA-Psi > Psi Overview / Psi Metrics
+
+Configure
+---------
+Override the interval or destination index in etc/apps/TA-psi/local/inputs.conf
+(never edit default/).
+
+Troubleshooting
+---------------
+  * If /proc/pressure is absent (very old kernel / disabled) the collector reports 'unsupported'.
+
+License
+-------
+SOURCE-AVAILABLE (see LICENSE) - free personal, educational and evaluation
+use; commercial or production use requires a paid license from BentleyPC
+LLC (https://www.bentleypc.com).
