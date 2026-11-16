@@ -1,67 +1,62 @@
 <dashboard version="1.1" theme="light">
   <label>TA-psi Metrics</label>
-  <description>Index-time metrics over index=metrics (sourcetype=psi:metrics)</description>
+  <description> Index-time metrics over index=metrics (sourcetype psi:metrics); series prefixed 'psi.'.</description>
   <row>
     <panel>
-      <title>All psi.* series</title>
+      <title>PSI some avg10 (%) per resource</title>
       <chart>
         <search>
-          <query>| mstats avg("psi.*") as "v*" where index=metrics by metric_name span=5m
-| foreach v* [eval Value=coalesce(Value,&lt;&lt;FIELD&gt;&gt;)]
-| fields - v*
-| xyseries _time metric_name Value</query>
+          <query>| mstats avg("psi.*_some_avg10") as "v*" where index=metrics by metric_name span=5m
+| rename v* as "psi.*_some_avg10"</query>
           <done/>
         </search>
         <option name="charting.chart">line</option>
-        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.nullValueRendering">connect</option>
         <option name="charting.drilldown">none</option>
       </chart>
     </panel>
-      <panel>
-      <title>CPU pressure (avg10/avg60/avg300)</title>
+  </row>
+  <row>
+    <panel>
+      <title>PSI some avg60 (%) per resource</title>
       <chart>
         <search>
-          <query>| mstats avg("psi.*") as "v*" where index=metrics by metric_name span=5m
-| search metric_name IN ("psi_cpu_some_avg10","psi_cpu_full_avg10","psi_cpu_some_avg60","psi_cpu_full_avg60")
-| foreach v* [eval Value=coalesce(Value,&lt;&lt;FIELD&gt;&gt;)]
-| fields - v*
-| xyseries _time metric_name Value</query>
+          <query>| mstats avg("psi.*_some_avg60") as "v*" where index=metrics by metric_name span=5m
+| rename v* as "psi.*_some_avg60"</query>
           <done/>
         </search>
         <option name="charting.chart">line</option>
-        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.nullValueRendering">connect</option>
         <option name="charting.drilldown">none</option>
       </chart>
     </panel>
-      <panel>
-      <title>Memory pressure</title>
+  </row>
+  <row>
+    <panel>
+      <title>PSI full avg10 (%) per resource</title>
       <chart>
         <search>
-          <query>| mstats avg("psi.*") as "v*" where index=metrics by metric_name span=5m
-| search metric_name IN ("psi_mem_some_avg10","psi_mem_full_avg10")
-| foreach v* [eval Value=coalesce(Value,&lt;&lt;FIELD&gt;&gt;)]
-| fields - v*
-| xyseries _time metric_name Value</query>
+          <query>| mstats avg("psi.*_full_avg10") as "v*" where index=metrics by metric_name span=5m
+| rename v* as "psi.*_full_avg10"</query>
           <done/>
         </search>
         <option name="charting.chart">line</option>
-        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.nullValueRendering">connect</option>
         <option name="charting.drilldown">none</option>
       </chart>
     </panel>
-      <panel>
-      <title>IO pressure</title>
+  </row>
+  <row>
+    <panel>
+      <title>PSI uninterruptible time (ms cumulative) per resource</title>
       <chart>
         <search>
-          <query>| mstats avg("psi.*") as "v*" where index=metrics by metric_name span=5m
-| search metric_name IN ("psi_io_some_avg10","psi_io_full_avg10")
-| foreach v* [eval Value=coalesce(Value,&lt;&lt;FIELD&gt;&gt;)]
-| fields - v*
-| xyseries _time metric_name Value</query>
+          <query>| mstats avg("psi.*_total_ms") as "v*" where index=metrics by metric_name span=5m
+| rename v* as "psi.*_total_ms"</query>
           <done/>
         </search>
         <option name="charting.chart">line</option>
-        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.nullValueRendering">connect</option>
         <option name="charting.drilldown">none</option>
       </chart>
     </panel>

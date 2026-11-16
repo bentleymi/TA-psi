@@ -5,10 +5,10 @@
     "id": {
       "group": null,
       "name": "TA-psi",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     "author": [{"name":"Michael \"JKat54\" Bentley","email":"michael@bentleypc.com","company":"BentleyPC LLC"}],
-    "releaseDate": "11/14/2026",
+    "releaseDate": "11/16/2026",
     "description": "Collects PSI (pressure stall information) for CPU, memory and IO from /proc/pressure: some/full averages over 10s/60s/300s, including per-cgroup v2 pressure files when present. Emits JSON events to index=main (sourcetype psi:status) every 60s and psi_* metrics to index=metrics (sourcetype psi:metrics), with dashboards.",
     "classification": {
       "intendedAudience": "IT",

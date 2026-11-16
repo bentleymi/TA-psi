@@ -3,45 +3,44 @@
   <description>Collects PSI (pressure stall information) for CPU, memory and IO from /proc/pressure: some/full averages over 10s/60s/300s, including per-cgroup v2 pressure files when present.</description>
   <row>
     <panel>
-      <title>Hosts Reporting (latest)</title>
-      <table>
-        <search>
-          <query>index=main sourcetype="psi:status"
-| stats latest(_time) as "Last seen", count as Reports by host
-| table host "Last seen" Reports</query>
-          <done/>
-        </search>
-        <option name="drilldown">none</option>
-      </table>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Distinct psi.* Metrics (last hour)</title>
+      <title>CPU pressure some avg10 (% - per host)</title>
       <single>
         <search>
-          <query>| mcatalog values(metric_name) as m where index=metrics metric_name="psi.*"
-| eval count=mvcount(m)</query>
+          <query>| mstats avg("psi.psi_cpu_some_avg10") as value where index=metrics span=5m
+| fields - _time | tail 1</query>
           <done/>
         </search>
-        <option name="underLabel">psi.* metrics streaming</option>
       </single>
     </panel>
-  </row>
-  <row>
     <panel>
-      <title>Issues (newest first)</title>
-      <table>
+      <title>IO pressure some avg10 (% - per host)</title>
+      <single>
         <search>
-          <query>index=main sourcetype="psi:status" _raw="*alarm*"
-| sort - _time
-| table _time host _raw
-| rename _raw as Event
-| head 200</query>
+          <query>| mstats avg("psi.psi_io_some_avg10") as value where index=metrics span=5m
+| fields - _time | tail 1</query>
           <done/>
         </search>
-        <option name="drilldown">none</option>
-      </table>
+      </single>
+    </panel>
+    <panel>
+      <title>Memory pressure full avg10 (% - per host)</title>
+      <single>
+        <search>
+          <query>| mstats avg("psi.psi_mem_full_avg10") as value where index=metrics span=5m
+| fields - _time | tail 1</query>
+          <done/>
+        </search>
+      </single>
+    </panel>
+    <panel>
+      <title>IO pressure total (ms, per host)</title>
+      <single>
+        <search>
+          <query>| mstats avg("psi.psi_io_total_ms") as value where index=metrics span=5m
+| fields - _time | tail 1</query>
+          <done/>
+        </search>
+      </single>
     </panel>
   </row>
 </dashboard>
