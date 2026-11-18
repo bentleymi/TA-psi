@@ -19,6 +19,8 @@ FIELDS = (
 
 LINE_RE = re.compile(r"^(some|full) avg10=([\d.]+) avg60=([\d.]+) avg300=([\d.]+) total=([\d.]+)")
 
+USEC_PER_MSEC = 1000.0
+
 
 def read_file(path):
     try:
@@ -35,6 +37,11 @@ def _num(x):
         return None
 
 
+def _ms(x):
+    v = _num(x)
+    return None if v is None else v / USEC_PER_MSEC
+
+
 def parse_pressure(path):
     text = read_file(path)
     if text is None:
@@ -49,7 +56,7 @@ def parse_pressure(path):
             rec["some_avg10"] = _num(a10)
             rec["some_avg60"] = _num(a60)
             rec["some_avg300"] = _num(a300)
-            rec["total_ms"] = _num(total)
+            rec["total_ms"] = _ms(total)
         else:
             rec["full_avg10"] = _num(a10)
             rec["full_avg60"] = _num(a60)
