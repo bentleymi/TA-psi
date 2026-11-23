@@ -3,5 +3,6 @@
     <view name="psi_overview" />
     <view name="psi_metrics" />
     <search label="TA-psi Events" search="search index=main sourcetype=psi:status" />
+    <view name="license" />
   </nav>
 </application>
